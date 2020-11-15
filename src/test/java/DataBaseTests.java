@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 import java.sql.*;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
 
 public class DataBaseTests {
     Connection connection = null;
@@ -164,6 +165,19 @@ public class DataBaseTests {
             statement.executeUpdate("DROP DATABASE " + dataBaseName);
         } catch (SQLException ex) {
             ex.printStackTrace();
+        }
+    }
+
+    @Test(priority = 11)
+    public void checkIsDBExist() throws Exception {
+        BaseTest baseTest = new BaseTest();
+        baseTest.toConnectWithOutDB();
+        ResultSet resultSet = connection.getMetaData().getCatalogs();
+
+        while (resultSet.next()) {
+            String tempDatabaseName = resultSet.getString(1);
+            System.out.println(tempDatabaseName);
+            assertNotEquals(dataBaseName, tempDatabaseName);
         }
     }
 

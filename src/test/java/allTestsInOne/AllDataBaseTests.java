@@ -1,6 +1,5 @@
 package allTestsInOne;
 
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
@@ -13,6 +12,7 @@ public class AllDataBaseTests {
     Connection connection = null;
     AllBaseTest allBaseTest = new AllBaseTest();
     Statement statement = null;
+
     String userName = "root";
     String password = "0000";
     String tableName = "Authors";
@@ -24,7 +24,7 @@ public class AllDataBaseTests {
     String lastName[] = {"Christie", "King", "Brooks", "Asimov"};
     int yearOfBirth[] = {1890, 1947, 1944, 1920};
 
-    public AllDataBaseTests() throws SQLException {
+    public AllDataBaseTests() {
     }
 
     @Test(priority = 1)
@@ -128,7 +128,7 @@ public class AllDataBaseTests {
     }
 
     @Test(priority = 7)
-    public void deleteRow() throws SQLException {
+    public void deleteRow() {
         connection = allBaseTest.toConnect(urlDB, userName, password);
         try {
             statement = connection.createStatement();
@@ -139,7 +139,7 @@ public class AllDataBaseTests {
     }
 
     @Test(priority = 8)
-    public void selectToCheckDeletion() throws SQLException {
+    public void selectToCheckDeletion() {
         connection = allBaseTest.toConnect(urlDB, userName, password);
         try {
             statement = connection.createStatement();
@@ -160,7 +160,7 @@ public class AllDataBaseTests {
     }
 
     @Test(priority = 9)
-    public void dropTable() throws SQLException {
+    public void dropTable() {
         connection = allBaseTest.toConnect(urlDB, userName, password);
         try {
             statement = connection.createStatement();
@@ -183,7 +183,7 @@ public class AllDataBaseTests {
     }
 
     @Test(priority = 11)
-    public void dropDataBase() throws SQLException {
+    public void dropDataBase() {
         connection = allBaseTest.toConnect(urlDB, userName, password);
         try {
             statement = connection.createStatement();
@@ -194,15 +194,20 @@ public class AllDataBaseTests {
     }
 
     @Test(priority = 12)
-    public void checkIsDBExist() throws Exception {
+    public void checkIsDBExist() {
         connection = allBaseTest.toConnect(url, userName, password);
-        ResultSet resultSet = connection.getMetaData().getCatalogs();
 
-        while (resultSet.next()) {
-            String tempDatabaseName = resultSet.getString(1);
-            System.out.println(tempDatabaseName);
-            assertNotEquals(dataBaseName, tempDatabaseName);
+        try {
+            ResultSet resultSet = connection.getMetaData().getCatalogs();
+            while (resultSet.next()) {
+                String tempDatabaseName = resultSet.getString(1);
+                System.out.println(tempDatabaseName);
+                assertNotEquals(dataBaseName, tempDatabaseName);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
+
     }
 
     @AfterMethod
